@@ -1,0 +1,62 @@
+Deep Learning Overview
+- Linear Classifier: basics of image classification using 
+Support Vector Machines (SVM), loss functions, optimization, and backpropagation
+- Artificial Neural Network (ANN) Foundations: individual neurons, activation functions (Sigmoid, ReLU, etc.), 
+multi-layer fully connected network structures
+- Training Deep Neural Networks: data preprocessing, gradient descent, learning rate selection, regularization techniques
+- Transformer: Seg2seq architecture (self-attention, multi-head attention, positional encoding, applications)
+
+RNN & Variants
+- Basic RNN: Vanila RNN structures, weight sharing in time dimension, Back-Propagation Through Time
+- RNN Training Issues: gradient vanishing, gradient clipping
+- LSTM: gate structure, memory cells for long-term dependencies
+- GRU: simplified LSTM variant which merges states and gates
+- RNN applications: speech recognition, image captioning, text sentiment classification, text generation
+
+RNN Extensions & DNC
+- NTM: combining neural networks with external memory components
+- DNC: neural networks with dynamic external memory
+- theoretical foundations: approximation capabilities of RNNs and their Turing-complete nature
+
+Computer Vision
+- Visual Tasks: image classification, localization, object detection, semantic segmentation
+- Object Detection Methods: R-CNN series, YOLO (You Only Look Once), SSD (Single Shot MultiBox Detector), and DETR (Detection Transformer)
+- Image Segmentation: Full Convolutional Networks (FCN) and subsequent developments (SegNet, UNet, PSPNet, and Mask R-CNN)
+- Transformer-based Segmentation: TransUnet and Swin Transformer for specialized tasks like medical image segmentation
+
+Computer Vision & Autonomous Driving
+- Self-Driving Principles: Differentiates between autonomous operation and Advanced Driver Assistance Systems (ADAS)
+- Sensor Types and Data: role of Lidar, cameras, sonar, and GPS/GNSS in collecting the massive amounts of data required for perception
+- Driving Perception: traffic sign detection, pedestrian and vehicle detection, path perception using networks like LaneNet and PilotNet
+
+Multimodal Vision Large Models
+- ViT: architecture for treating image patches as "words" for parallel training in a Transformer structure
+- CLIP: aligns text and images in a common latent space via self-supervised learning
+- MAE: asymmetric encoder-decoder architecture that learns by reconstructing missing pixels from highly masked image patches
+
+LLM API Integration
+- API usage: steps for applying for API keys, setting base URLs, and calling specific models through interfaces
+- Dialogue Roles: System (instructions), User (requests), and Assistant (responses)
+- Context Engineering: Addresses challenges like catastrophic forgetting and techniques for managing long-term memory and context compression
+
+Mamba: Selective State Space Models
+- State Space Models (SSM): continuous and discrete signal mapping using linear time-invariant systems
+- Discretization: transforming continuous parameters into discrete ones using rules like Zero-Order Hold (ZOH)
+- Mamba Architecture: selection mechanism and hardware-aware implementation (selective scan and kernel fusion) to achieve linear-time sequence modeling
+
+Torchvision Object Detection
+- Library Core: PyTorch-based library for CV tasks, containing pre-trained models and core modules for datasets, transforms, and operators
+- OD Implementation: fine-tuning Faster R-CNN or SSD models, dataset definition, model modification, and training/testing workflows
+
+
+
+
+
+
+
+
+
+
+
+
+
