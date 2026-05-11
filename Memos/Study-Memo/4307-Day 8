@@ -1,0 +1,39 @@
+Recurrent Neural Networks (RNN) & Variants
+- Foundations: Introduction to RNN structure, terminology, and the concept of weight sharing in the time dimension.
+- Training & Optimization: Back-propagation through time, gradient vanishing/exploding problems, and gradient clipping.
+- Advanced Architectures: Detailed mechanics of Long Short-Term Memory and Gated Recurrent Units.
+- Applications: Sequence modeling for speech recognition, image captioning, sentiment classification, and text generation.
+
+Computer Vision: Fundamentals & Indicators
+- Human Perception: Comparison of computer vision to the human visual system, including brain visual pathways and cortex processing.
+- Visual Tasks: Core definitions for image classification, localization, object detection, and semantic segmentation.
+- Recognition Indicators: Detailed metrics including Precision, Recall, Accuracy, F1 score, Mean Average Precision, and Area Under Curve
+
+Object Detection & Image Segmentation Methods
+- Detection Evolution: Comparison of Traditional methods (OpenCV) and Deep Learning breakthroughs (AlexNet, R-CNN series, YOLO, and SSD).
+- Segmentation Milestones: Fully Convolutional Networks (FCN), SegNet, UNet, and PSPNet.
+- Modern Architectures: Integration of Transformers in detection (DETR) and medical image segmentation (TransUnet, Swin-UNet).
+
+Computer Vision in Autonomous Driving
+- System Principles: Autonomous vs assisted driving (ADAS) and road perception (LaneNet, PathNet).
+- AI Applications: Real-time detection of traffic signs, pedestrians, vehicles, and lane lines.
+- Data Scale: The flood of data handled by LiDAR, cameras, and sonar sensors.
+
+Transformers & Attention Mechanism History
+- Language Model Evolution: static word embeddings to contextual embeddings and neural language models.
+- Attention Innovation: development of alignment in machine translation and the emergence of self-attention.
+- The Transformer Era: Landmark shift to encoder-decoder structures based entirely on attention.
+
+LLM Inference Efficiency & Hardware Acceleration
+- Inference Breakdown: Analysis of the Prompt Phase" (KV cache production) vs. the Token Generation Phase.
+- KV Cache Optimization: Principles of scaling inference and strategies like Multi-Query Attention (MQA) or sliding window attention.
+- Compute Hardware: Utilizing Intel AVX-512 and AMX instructions for GEMM (General Matrix Multiply) operations and floating-point quantization (BF16, INT8).
+
+Multimodal & Vision Large Models
+- Model Surveys: Overview of Vision Transformer (ViT), OpenAI CLIP (Contrastive Language-Image Pre-training), and Meta MAE.
+- Masked Autoencoders (MAE): Asymmetric encoder-decoder design and high-rate masking (75%) for self-supervised visual learning.
+
+Practical Implementation Tools
+- Data & Training: Accessing GPU-based annotation and training platforms.
+- LaTeX for Research: Mastering structural auto-typesetting, complex formula support, and Overleaf collaboration.
+- Torchvision: Implementation of object detection datasets, transforms, and pre-trained models (Faster R-CNN, SSD) in PyTorch.
