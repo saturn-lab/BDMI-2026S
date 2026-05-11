@@ -1,0 +1,57 @@
+Deep Learning 6: RNN & Variants
+- Introductory Guide and Applications (Poem/Couplet Writing) 
+- Artificial Neural Networks and Neurons 
+- Multilayer Neural Networks and Topology 
+- Convolutional Networks: Kernels and Operations 
+- Recurrent Neural Networks (RNN) and Vanilla RNN Structure 
+- Bidirectional RNN and Deep RNN Training RNNs: Loss Functions and Backpropagation Through Time (BPTT) 
+- Challenges in Training: Gradient Vanishing and Clipping 
+- RNN Variants: Long Short-Term Memory (LSTM) and Gated Recurrent Unit (GRU) 
+- RNN Applications: Speech Recognition, Image Captioning, and Text Generation
+
+Transformer Principles, ViT, and BERT/GPT/T5
+- Terminology and Key Concepts
+- "ImageNet Moment" for Natural Language Processing
+- Transformer Structure: Encoder-Decoder Architecture 
+- Attention Mechanisms: Self-Attention and Multi-Head Attention 
+- Position Encoding and Masking Vision Transformer (ViT) and Swin Transformer 
+- Code Implementation in TensorFlow and PyTorch
+
+NLP and Word2Vec
+- NLP Tasks and the GLUE Benchmark 
+- Statistical vs. Neural Language Models 
+- Word Embedding and Vector Representation (Word2Vec) 
+- Transition from Language Models (LM) to Large Language Models (LLM) 
+- SOTA Model Rankings and Chatbots
+
+LLM Inference Efficiency and KV Cache
+- KV Cache Principles and Complexity Analysis 
+- Memory Footprint Challenges for Large Models 
+- Attention Efficiency Scaling: Multi-Query Attention (MQA) 
+- Sparse Attention Techniques (Sliding Window, Flash Attention) 
+- Adaptive KV Cache Management (SnapKV, PyramidKV) 
+- Inference Engines: vLLM and SGLang
+
+Hardware Acceleration and GEMM Optimization
+- Quantization and Floating-Point Formats (Float32, 16, 8) 
+- General Matrix Multiply (GEMM) Optimization 
+- Intel CPU Acceleration: AVX and AMX Instructions 
+- Sparse Weight Decompression and Parallelization
+
+Introduction to Knowledge Distillation
+- Model Compression Challenges in the LLM Era
+- The Teacher-Student Architecture
+- Knowledge Sources: Logit, Feature, and Similarity Distillation
+- Distillation Mechanisms: Offline, Online, and Self-Distillation
+- Advanced KD: Data-Free, Cross-modal, and Chain of Thought (CoT) Distillation
+
+Hugging Face Methods for Transformer NLP 
+- Encoder-Decoder Framework and Transfer Learning
+- Comparison: Transformer vs. Recurrent Networks
+- Hugging Face Ecosystem: Model Hub and Dataset Center
+- Practical Tools: Pipelines, Tokenizers, and Postprocessing
+
+Transformer Origins and AI History
+- Milestones in AI (Deep Blue to AlphaGo)
+- The Generative AI Explosion and Self-Supervised Learning
+- Core Technologies for LLMs: NLP Tasks and Word Embeddings
