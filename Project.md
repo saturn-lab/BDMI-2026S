@@ -1,9 +1,15 @@
 # 大作业选题 Projects
 
-## LLM Track
+以下会议的[截止时间](https://ccfddl.com/)均为 AoE（Anywhere on Earth (UTC-12)，即北京时间第二天的 20:00）。
 
-> 调研工作需要在课程网站上发布一篇 `mkdocs` 风格的博客作为最终产出。
-> For those who are preparing a survey, you may have to publish a `mkdocs`-style blog on the course website as final outcome.
+|  会议名称  |        CCF Rank        |  Abstract  | Submission |
+| :--------: | :--------------------: | :--------: | :--------: |
+|  AAAI'27   |    CCF-A (人工智能)    | 2026-07-20 | 2026-07-27 |
+| BigData'26 | CCF-C (交叉/综合/新兴) |    N/A     | 2026-08-21 |
+
+有意愿投稿的同学欢迎联系课程组和助教，我们会提供相关的辅导和支持。
+
+****
 
 ### [CZ-1] KV compression
 
