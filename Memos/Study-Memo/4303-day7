@@ -1,0 +1,419 @@
+# Anthony (NTU)
+
+## Overview
+
+Week 7 is mainly about **sequence models and NLP**: RNNs, attention, Transformers, efficient inference, Word2Vec, and HuggingFace usage.
+
+Main topics:
+
+- **RNNs**: recurrent structure, weight sharing over time, BPTT, gradient clipping
+- **LSTM / GRU**: gated RNN variants for longer dependencies
+- **Attention and Transformers**: encoder-decoder, self-attention, Q/K/V, masking, positional encoding
+- **Transformer inference**: prompt/prefill stage, decode stage, KV cache, inference bottlenecks
+- **Hardware / efficiency**: quantization, GEMM, AVX, AMX, sparse/low-rank attention
+- **NLP and language models**: GLUE tasks, language modelling, perplexity
+- **Word2Vec**: CBOW, Skip-gram, negative sampling
+- **HuggingFace Transformers**: pipeline, tokenizer, model, postprocessing
+
+---
+
+## 1) Recurrent Neural Networks (RNN)
+
+### Key points
+
+- RNNs are used for **sequential data** such as text, speech, and time series.
+- The current hidden state is passed to the next time step.
+- The same weights are reused at every time step. This is called **weight sharing**.
+- A vanilla RNN can be viewed as an MLP reused repeatedly across time.
+
+Basic idea:
+
+```text
+x_t + h_{t-1} -> RNN cell -> h_t -> output_t
+```
+
+Common notation:
+
+- `x_t`: input at time step `t`
+- `h_t`: hidden state at time step `t`
+- `o_t`: output at time step `t`
+- `U`, `W`, `V`: shared weight matrices
+
+---
+
+## 2) BPTT and Gradient Clipping
+
+### Key points
+
+RNNs are trained using **Backpropagation Through Time (BPTT)**.
+
+The RNN is first unfolded across time:
+
+```text
+x_1 -> h_1 -> o_1
+x_2 -> h_2 -> o_2
+x_3 -> h_3 -> o_3
+```
+
+Then gradients are propagated backwards from later time steps to earlier time steps.
+
+Issues:
+
+- Training is sequential, so it is hard to parallelize.
+- Memory cost grows with sequence length because hidden states must be stored.
+- Gradients may vanish or explode.
+
+**Gradient clipping** limits very large gradients during training.
+
+```python
+torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+```
+
+---
+
+## 3) LSTM and GRU
+
+### LSTM
+
+LSTM improves vanilla RNN by adding a **memory cell** and gates.
+
+Main parts:
+
+- **Cell state**: stores long-term information
+- **Input gate**: controls what new information enters
+- **Forget gate**: controls what old information is removed
+- **Output gate**: controls what information is output
+
+Why it matters:
+
+- Helps with long-term dependencies
+- Reduces the vanishing gradient problem
+- Converges better than a basic RNN for many sequence tasks
+
+### GRU
+
+GRU is a simpler gated RNN.
+
+- Fewer gates than LSTM
+- Lower computation cost
+- Often performs similarly to LSTM in practice
+
+Simple comparison:
+
+| Model | Main idea | Advantage |
+|---|---|---|
+| Vanilla RNN | Hidden state recurrence | Simple |
+| LSTM | Memory cell + gates | Handles long dependencies better |
+| GRU | Simplified gates | Faster and cheaper than LSTM |
+
+---
+
+## 4) Attention Mechanism
+
+### Key points
+
+Attention was introduced to reduce the bottleneck in encoder-decoder models.
+
+Instead of compressing the whole input sequence into one fixed vector, attention lets the decoder look at different encoder states when generating each output token.
+
+Basic idea:
+
+```text
+Decoder state compares with encoder states
+-> attention weights
+-> weighted context vector
+-> next output
+```
+
+Why attention helps:
+
+- Better for long sequences
+- Learns alignment between input and output tokens
+- Became the foundation of Transformers
+
+---
+
+## 5) Transformer Recap
+
+### Key points
+
+A Transformer removes recurrence and relies mainly on **self-attention**.
+
+Main components:
+
+- Token embeddings
+- Positional encoding
+- Self-attention
+- Multi-head attention
+- Feedforward network
+- Residual connection + LayerNorm
+- Masking
+
+Self-attention formula:
+
+```text
+Attention(Q, K, V) = softmax((QK^T) / sqrt(d_k)) V
+```
+
+Meaning:
+
+- `Q` asks what the token is looking for.
+- `K` represents what each token contains.
+- `V` contains the information passed forward.
+- `QK^T` gives similarity scores.
+- `softmax` converts scores into attention weights.
+
+---
+
+## 6) Encoder, Decoder, and Model Families
+
+### Encoder-decoder Transformer
+
+```text
+Input tokens -> Encoder -> Context representation -> Decoder -> Output tokens
+```
+
+The encoder reads the input sequence. The decoder generates output tokens using:
+
+- masked self-attention over previous output tokens
+- cross-attention over encoder outputs
+
+### Common Transformer families
+
+| Family | Structure | Common use |
+|---|---|---|
+| BERT / RoBERTa | Encoder-only | Classification, NER, extractive QA |
+| GPT | Decoder-only | Text generation |
+| T5 / BART | Encoder-decoder | Translation, summarization, generative QA |
+
+---
+
+## 7) Transformer Inference and KV Cache
+
+### Key points
+
+LLM inference has two main phases:
+
+1. **Prefill / prompt phase**
+   - The model processes the full prompt.
+   - It creates the **KV cache** for each Transformer layer.
+
+2. **Decode / token generation phase**
+   - The model generates one token at a time.
+   - It reuses the KV cache instead of recomputing all previous keys and values.
+
+Without KV cache, the model repeatedly recomputes attention for previous tokens.
+
+With KV cache:
+
+```text
+Previous K/V stored -> new token only computes new Q/K/V -> faster decoding
+```
+
+Trade-off:
+
+- Faster generation
+- More memory usage because K and V tensors must be stored
+
+---
+
+## 8) Efficient LLM Inference
+
+### Key points
+
+LLM inference can be improved by reducing attention cost, reducing memory movement, or using faster hardware operations.
+
+Common methods:
+
+- **KV cache**: avoids repeated K/V computation during decoding
+- **Sparse attention**: attends to fewer tokens
+- **Low-rank / kernel approximation**: approximates full attention
+- **Quantization**: uses lower precision such as FP16, BF16, INT8, or FP8
+- **Pruning / compression**: removes less important weights or structures
+- **Prompt caching**: reuses responses or internal states for similar prompts
+
+Important bottleneck:
+
+```text
+LLM linear layers and attention -> matrix multiplication -> GEMM workload
+```
+
+Hardware examples:
+
+- **AVX**: vectorized CPU instructions
+- **AMX**: matrix-oriented CPU acceleration, useful for BF16 / INT8 GEMM
+- **FPGA**: customizable hardware acceleration
+
+---
+
+## 9) NLP Tasks and Language Models
+
+### NLP tasks
+
+Examples from GLUE-style benchmarks:
+
+- **CoLA**: grammar acceptability
+- **SST-2**: sentiment classification
+- **MRPC / QQP**: sentence or question similarity
+- **MNLI / QNLI / RTE / WNLI**: natural language inference
+
+### Language model
+
+A language model predicts the next word or character.
+
+```text
+Given:  w_1, w_2, ..., w_{t-1}
+Predict: w_t
+```
+
+Language models are useful for:
+
+- Text generation
+- Text classification
+- Question answering
+- Sentence probability estimation
+
+Common evaluation metrics:
+
+- **Cross-entropy**
+- **Perplexity**
+
+Lower perplexity usually means the model is less uncertain about the next token.
+
+---
+
+## 10) Word2Vec
+
+### Key points
+
+Word2Vec learns vector representations of words.
+
+The goal is to place semantically similar words close together in vector space.
+
+Two main models:
+
+| Model | Prediction direction |
+|---|---|
+| CBOW | Context words -> center word |
+| Skip-gram | Center word -> context words |
+
+### Skip-gram
+
+Skip-gram uses one word to predict nearby context words.
+
+Example:
+
+```text
+Sentence: I like machine learning
+Center word: machine
+Context words: I, like, learning
+```
+
+### Negative sampling
+
+Full softmax over a large vocabulary is expensive.
+
+Negative sampling makes training cheaper by comparing:
+
+- positive word pairs that appear together
+- negative word pairs sampled randomly
+
+---
+
+## 11) HuggingFace Transformers
+
+### Pipeline
+
+`pipeline()` wraps preprocessing, model inference, and postprocessing.
+
+```python
+from transformers import pipeline
+
+classifier = pipeline("sentiment-analysis")
+result = classifier("I like this course.")
+print(result)
+```
+
+Common pipelines:
+
+- `sentiment-analysis`
+- `zero-shot-classification`
+- `question-answering`
+- `summarization`
+- `text-generation`
+- `translation`
+- `fill-mask`
+- `ner`
+- `feature-extraction`
+
+---
+
+## 12) Tokenizer, Model, and Postprocessing
+
+### Tokenizer
+
+Transformers cannot directly process raw text. The tokenizer converts text into model inputs.
+
+```python
+from transformers import AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+inputs = tokenizer(
+    ["I like Transformers.", "This is not bad."],
+    padding=True,
+    truncation=True,
+    return_tensors="pt"
+)
+
+print(inputs.keys())
+```
+
+Typical outputs:
+
+- `input_ids`
+- `attention_mask`
+
+### Model and logits
+
+```python
+import torch
+from transformers import AutoModelForSequenceClassification
+
+model = AutoModelForSequenceClassification.from_pretrained(
+    "distilbert-base-uncased-finetuned-sst-2-english"
+)
+
+outputs = model(**inputs)
+probs = torch.softmax(outputs.logits, dim=-1)
+print(probs)
+```
+
+Postprocessing converts logits into probabilities and labels.
+
+---
+
+## 13) Mental Model
+
+For RNNs:
+
+```text
+Sequence -> repeated RNN cell -> hidden states -> outputs
+```
+
+For Transformers:
+
+```text
+Tokens -> embeddings + positions -> attention -> feedforward -> prediction
+```
+
+For LLM inference:
+
+```text
+Prompt -> prefill KV cache -> decode tokens one by one -> update KV cache
+```
+
+For HuggingFace:
+
+```text
+Raw text -> tokenizer -> model -> logits -> postprocessing -> label / generated text
+```
